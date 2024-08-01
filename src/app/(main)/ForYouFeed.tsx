@@ -1,6 +1,7 @@
 "use client";
 import InfiniteScrollContainer from "@/components/InfiniteScrollContainer";
 import Post from "@/components/posts/Post";
+import PostsLoadingSkeleton from "@/components/posts/PostsLoadingSkeleton";
 import { Button } from "@/components/ui/button";
 import kyInstance from "@/lib/ky";
 import { PostData, PostsPage } from "@/lib/types";
@@ -31,7 +32,11 @@ const ForYouFeed = () => {
   const posts = data?.pages.flatMap((page) => page.posts) || [];
 
   if (status === "pending") {
-    return <Loader2 className="mx-auto animate-spin" />;
+    return <PostsLoadingSkeleton />;
+  }
+
+  if (status === "success" && !posts.length && !hasNextPage) {
+    return <p>No one has posted yet. Go post yours now :)</p>;
   }
 
   if (status === "error") {
