@@ -25,9 +25,9 @@ model User {
   avatarUrl    String?
   bio          String?
   session      Session[]
+  post      Post[]
 
   createdAt DateTime @default(now())
-  Post      Post[]
 
   @@map("users")
 }
