@@ -5,7 +5,7 @@ interface LinkifyProps {
   children: React.ReactNode;
 }
 
-const Linkify = ({ children }: LinkifyProps) => {
+export default function Linkify({ children }: LinkifyProps) {
   return (
     <LinkifyUsername>
       <LinkifyHashtag>
@@ -13,9 +13,7 @@ const Linkify = ({ children }: LinkifyProps) => {
       </LinkifyHashtag>
     </LinkifyUsername>
   );
-};
-
-export default Linkify;
+}
 
 function LinkifyUrl({ children }: LinkifyProps) {
   return (
@@ -27,19 +25,15 @@ function LinkifyUsername({ children }: LinkifyProps) {
   return (
     <LinkIt
       regex={/(@[a-zA-Z0-9_-]+)/}
-      component={(match, key) => {
-        const username = match.slice(1);
-
-        return (
-          <Link
-            key={key}
-            href={`/users/${username}`}
-            className="text-primary hover:underline"
-          >
-            {match}
-          </Link>
-        );
-      }}
+      component={(match, key) => (
+        <Link
+          key={key}
+          href={`/users/${match.slice(1)}`}
+          className="text-primary hover:underline"
+        >
+          {match}
+        </Link>
+      )}
     >
       {children}
     </LinkIt>
@@ -56,9 +50,11 @@ function LinkifyHashtag({ children }: LinkifyProps) {
           href={`/hashtag/${match.slice(1)}`}
           className="text-primary hover:underline"
         >
-          {children}
+          {match}
         </Link>
       )}
-    ></LinkIt>
+    >
+      {children}
+    </LinkIt>
   );
 }
