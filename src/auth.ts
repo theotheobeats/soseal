@@ -57,7 +57,6 @@ export const validateRequest = cache(
     try {
       if (result.session && result.session.fresh) {
         const sessionCookie = lucia.createSessionCookie(result.session.id);
-
         cookies().set(
           sessionCookie.name,
           sessionCookie.value,

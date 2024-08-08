@@ -11,8 +11,8 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -45,9 +45,9 @@ model Session {
 
 model Follow {
   followerId  String
-  follower    User    @relation("following", fields: [followerId], references: [id], onDelete: Cascade)
+  follower    User   @relation("following", fields: [followerId], references: [id], onDelete: Cascade)
   followingId String
-  following   User    @relation("followers", fields: [followingId], references: [id], onDelete: Cascade)
+  following   User   @relation("followers", fields: [followingId], references: [id], onDelete: Cascade)
 
   @@unique([followerId, followingId])
   @@map("follows")
