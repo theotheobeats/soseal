@@ -7,6 +7,7 @@ import UserAvatar from "../UserAvatar";
 import { formatRelativeDate } from "@/lib/utils";
 import { useSession } from "@/app/(main)/SessionProvider";
 import PostMoreButton from "./PostMoreButton";
+import Linkify from "../Linkify";
 
 interface PostProps {
   post: PostData;
@@ -39,11 +40,14 @@ const Post = ({ post }: PostProps) => {
         </div>
         {post.user.id === user.id && (
           <PostMoreButton
-            post={post} className="opacity-0 transition-opacity group-hover/post:opacity-100"
+            post={post}
+            className="opacity-0 transition-opacity group-hover/post:opacity-100"
           />
         )}
       </div>
-      <div className="whitespace-pre-line break-words">{post.content}</div>
+      <Linkify>
+        <div className="whitespace-pre-line break-words">{post.content}</div>
+      </Linkify>
     </article>
   );
 };
