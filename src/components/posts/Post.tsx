@@ -9,6 +9,8 @@ import { useSession } from "@/app/(main)/SessionProvider";
 import PostMoreButton from "./PostMoreButton";
 import Linkify from "../Linkify";
 import UserToolTip from "../UserToolTip";
+import { MessageCircle, ThumbsUp } from "lucide-react";
+import CommentEditor from "./editor/CommentEditor";
 
 interface PostProps {
   post: PostData;
@@ -55,6 +57,15 @@ const Post = ({ post }: PostProps) => {
       <Linkify>
         <div className="whitespace-pre-line break-words">{post.content}</div>
       </Linkify>
+      <div className="flex gap-4">
+          <div className="flex gap-1 items-center">
+            <ThumbsUp size={15}  />12k
+          </div>
+          <div className="flex gap-1 items-center">
+            <MessageCircle size={15}  />105
+          </div>
+      </div>
+      <CommentEditor />
     </article>
   );
 };
