@@ -78,3 +78,137 @@ export function useSubmitPostMutation() {
 
   return mutation;
 }
+
+export function useSubmitLikeMutation() {
+  const { toast } = useToast();
+
+  const queryClient = useQueryClient();
+
+  const { user } = useSession();
+
+  const mutation = useMutation({
+    mutationFn: submitPost,
+    onSuccess: async (newPost) => {
+      const queryFilter = {
+        queryKey: ["post-feed", "for-you"],
+        predicate(query) {
+          return (
+            query.queryKey.includes("for-you") ||
+            (query.queryKey.includes("user-posts") &&
+              query.queryKey.includes(user.id))
+          );
+        },
+      } satisfies QueryFilters;
+
+      await queryClient.cancelQueries(queryFilter);
+
+      // complex practice but way faster
+      // queryClient.setQueriesData<InfiniteData<PostsPage, string | null>>(
+      //   queryFilter,
+      //   (oldData) => {
+      //     const firstPage = oldData?.pages[0];
+
+      //     if (firstPage) {
+      //       return {
+      //         pageParams: oldData.pageParams,
+      //         pages: [
+      //           {
+      //             posts: [newPost, ...firstPage.posts],
+      //             nextCursor: firstPage.nextCursor,
+      //           },
+      //           ...oldData.pages.slice(1),
+      //         ],
+      //       };
+      //     }
+      //   },
+      // );
+
+      // queryClient.invalidateQueries({
+      //   queryKey: queryFilter.queryKey,
+      //   predicate(query) {
+      //     return queryFilter.predicate(query) && !query.state.data;
+      //   },
+      // });
+
+      // its a simple practice but slower:
+      queryClient.invalidateQueries(queryFilter);
+
+    },
+    onError(error) {
+      console.error(error);
+      toast({
+        variant: "destructive",
+        description: "Failed to like the post. Please try again later.",
+      });
+    },
+  });
+
+  return mutation;
+}
+
+export function useSubmitCommentMutation() {
+  const { toast } = useToast();
+
+  const queryClient = useQueryClient();
+
+  const { user } = useSession();
+
+  const mutation = useMutation({
+    mutationFn: submitPost,
+    onSuccess: async (newPost) => {
+      const queryFilter = {
+        queryKey: ["post-feed", "for-you"],
+        predicate(query) {
+          return (
+            query.queryKey.includes("for-you") ||
+            (query.queryKey.includes("user-posts") &&
+              query.queryKey.includes(user.id))
+          );
+        },
+      } satisfies QueryFilters;
+
+      await queryClient.cancelQueries(queryFilter);
+
+      // complex practice but way faster
+      // queryClient.setQueriesData<InfiniteData<PostsPage, string | null>>(
+      //   queryFilter,
+      //   (oldData) => {
+      //     const firstPage = oldData?.pages[0];
+
+      //     if (firstPage) {
+      //       return {
+      //         pageParams: oldData.pageParams,
+      //         pages: [
+      //           {
+      //             posts: [newPost, ...firstPage.posts],
+      //             nextCursor: firstPage.nextCursor,
+      //           },
+      //           ...oldData.pages.slice(1),
+      //         ],
+      //       };
+      //     }
+      //   },
+      // );
+
+      // queryClient.invalidateQueries({
+      //   queryKey: queryFilter.queryKey,
+      //   predicate(query) {
+      //     return queryFilter.predicate(query) && !query.state.data;
+      //   },
+      // });
+
+      // its a simple practice but slower:
+      queryClient.invalidateQueries(queryFilter);
+
+    },
+    onError(error) {
+      console.error(error);
+      toast({
+        variant: "destructive",
+        description: "Failed to like the post. Please try again later.",
+      });
+    },
+  });
+
+  return mutation;
+}

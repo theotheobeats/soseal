@@ -21,3 +21,29 @@ export async function deletePost(id: string) {
 
   return deletedPost;
 }
+
+export async function getLikes(postId: string) {
+  const { user } = await validateRequest();
+  if (!user) throw new Error("Unauthorized");
+
+  const like = await prisma.like.count({
+    where: { postId },
+  });
+
+  return like;
+}
+
+export async function isLiked(id: string) {
+  const { user } = await validateRequest();
+  if (!user) throw new Error("Unauthorized");
+
+  const like = await prisma.like.findUnique({
+    where: { id, userId: user.id },
+  });
+
+  if (!like) {
+    throw new Error("Post not found!");
+  }
+  
+  return isLiked;
+}

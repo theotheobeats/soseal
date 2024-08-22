@@ -7,14 +7,14 @@ import Placeholder from "@tiptap/extension-placeholder";
 import UserAvatar from "@/components/UserAvatar";
 import { useSession } from "@/app/(main)/SessionProvider";
 import "./styles.css";
-import { useSubmitPostMutation } from "./mutation";
+import { useSubmitCommentMutation } from "./mutation";
 import LoadingButton from "@/components/LoadingButton";
 import { SendHorizonal } from "lucide-react";
 
 const CommentEditor = () => {
   const { user } = useSession();
 
-  const mutation = useSubmitPostMutation();
+  const mutation = useSubmitCommentMutation();
 
   const editor = useEditor({
     extensions: [
@@ -55,7 +55,7 @@ const CommentEditor = () => {
             loading={mutation.isPending}
             className="min-w-10"
           >
-            <SendHorizonal size={15}/>
+            <SendHorizonal size={15} />
           </LoadingButton>
         </div>
       </div>

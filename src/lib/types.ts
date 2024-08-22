@@ -50,3 +50,7 @@ export interface followerInfo {
   followers: number;
   isFollowedByUser: boolean;
 }
+
+export interface Likes {
+  totalLikes: number;
+}
