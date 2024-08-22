@@ -12,6 +12,7 @@ import UserToolTip from "../UserToolTip";
 import { MessageCircle, ThumbsUp } from "lucide-react";
 import CommentEditor from "./editor/CommentEditor";
 import { getIsLiked, getLikes } from "./actions";
+import { useSubmitLikeMutation } from "./editor/mutation";
 
 interface PostProps {
   post: PostData;
@@ -22,6 +23,8 @@ const Post = ({ post }: PostProps) => {
   const [totalLike, setTotalLike] = useState<number | null>(null);
   const [isLiked, setIsLiked] = useState<boolean | null>(false);
 
+  const mutation = useSubmitLikeMutation();
+
   useEffect(() => {
     const fetchLikes = async () => {
       try {
@@ -30,7 +33,7 @@ const Post = ({ post }: PostProps) => {
         setIsLiked(liked);
         setTotalLike(likeCount);
 
-        console.log(likeCount)
+        console.log(likeCount);
       } catch (error) {
         console.error("Failed to fetch likes: ", error);
       }
@@ -38,6 +41,26 @@ const Post = ({ post }: PostProps) => {
 
     fetchLikes();
   }, [post.id]);
+
+  async function likeSubmit() {
+    mutation.mutate(
+      { isLiked: !isLiked, postId: post.id },
+      {
+        onSuccess: (data) => {
+          setIsLiked(!isLiked);
+
+          let newTotal: number;
+          if (!isLiked) {
+            newTotal = (totalLike || 0) + 1;
+          } else {
+            newTotal = (totalLike || 0) - 1;
+          }
+
+          setTotalLike(newTotal);
+        },
+      },
+    );
+  }
 
   return (
     <article className="group/post space-y-3 rounded-3xl bg-card p-5 shadow-sm">
@@ -81,7 +104,8 @@ const Post = ({ post }: PostProps) => {
         <div className="flex items-center gap-1">
           <ThumbsUp
             size={15}
-            className={`bold ${isLiked == true ? "text-purple-600" : ""} `}
+            className={`bold ${isLiked == true ? "text-purple-600" : ""} cursor-pointer transition-all hover:opacity-50`}
+            onClick={likeSubmit}
           />
           {totalLike ? (
             <span className="text-sm">
@@ -93,8 +117,7 @@ const Post = ({ post }: PostProps) => {
         </div>
 
         <div className="flex items-center gap-1 text-sm">
-          <MessageCircle size={15} />
-          105
+          <MessageCircle size={15} />0
         </div>
       </div>
       <CommentEditor />

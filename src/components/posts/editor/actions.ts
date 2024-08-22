@@ -22,3 +22,23 @@ export async function submitPost(input: string) {
 
   return newPost;
 }
+
+export async function submitLike(isLiked: boolean, postId: string) {
+  const { user } = await validateRequest();
+  if (!user) throw new Error("Unauthorized");
+
+  if (isLiked) {
+    const like = await prisma.like.create({
+      data: { postId, userId: user.id },
+    });
+    return { success: true, like };
+  } else {
+    const like = await prisma.like.deleteMany({
+      where: {
+        postId,
+        userId: user.id,
+      },
+    });
+    return { success: true, like };
+  }
+}
