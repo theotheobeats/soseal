@@ -11,7 +11,7 @@ import Linkify from "../Linkify";
 import UserToolTip from "../UserToolTip";
 import { MessageCircle, ThumbsUp } from "lucide-react";
 import CommentEditor from "./editor/CommentEditor";
-import { getLikes } from "./actions";
+import { getIsLiked, getLikes } from "./actions";
 
 interface PostProps {
   post: PostData;
@@ -20,13 +20,17 @@ interface PostProps {
 const Post = ({ post }: PostProps) => {
   const { user } = useSession();
   const [totalLike, setTotalLike] = useState<number | null>(null);
-  const [isLiked, setIsLiked] = useState<boolean | null>(true);
+  const [isLiked, setIsLiked] = useState<boolean | null>(false);
 
   useEffect(() => {
     const fetchLikes = async () => {
       try {
         const likeCount = await getLikes(post.id);
+        const liked = await getIsLiked(post.id);
+        setIsLiked(liked);
         setTotalLike(likeCount);
+
+        console.log(likeCount)
       } catch (error) {
         console.error("Failed to fetch likes: ", error);
       }
@@ -75,17 +79,20 @@ const Post = ({ post }: PostProps) => {
       </Linkify>
       <div className="flex gap-4">
         <div className="flex items-center gap-1">
-          <ThumbsUp size={15} className="bold text-purple-600" />
-          {totalLike !== 0 ? (
-            <span>
+          <ThumbsUp
+            size={15}
+            className={`bold ${isLiked == true ? "text-purple-600" : ""} `}
+          />
+          {totalLike ? (
+            <span className="text-sm">
               {totalLike} {totalLike === 1 ? "Like" : "Likes"}
             </span>
           ) : (
-            <span>be the first to like this post!</span>
+            <span className="text-sm">be the first to like this post!</span>
           )}
         </div>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 text-sm">
           <MessageCircle size={15} />
           105
         </div>

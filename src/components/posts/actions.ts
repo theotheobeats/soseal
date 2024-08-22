@@ -33,17 +33,17 @@ export async function getLikes(postId: string) {
   return like;
 }
 
-export async function isLiked(id: string) {
+export async function getIsLiked(postId: string) {
   const { user } = await validateRequest();
   if (!user) throw new Error("Unauthorized");
 
-  const like = await prisma.like.findUnique({
-    where: { id, userId: user.id },
+  const like = await prisma.like.findFirst({
+    where: { postId, userId: user.id },
   });
 
   if (!like) {
-    throw new Error("Post not found!");
+    return false;
   }
-  
-  return isLiked;
+
+  return true;
 }
