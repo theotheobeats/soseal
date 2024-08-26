@@ -23,9 +23,6 @@ export async function deletePost(id: string) {
 }
 
 export async function getLikes(postId: string) {
-  const { user } = await validateRequest();
-  if (!user) throw new Error("Unauthorized");
-
   const like = await prisma.like.count({
     where: { postId },
   });

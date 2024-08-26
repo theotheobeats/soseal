@@ -40,7 +40,7 @@ const Post = ({ post }: PostProps) => {
     };
 
     fetchLikes();
-  }, [post.id]);
+  }, []);
 
   async function likeSubmit() {
     mutation.mutate(
@@ -120,6 +120,19 @@ const Post = ({ post }: PostProps) => {
           <MessageCircle size={15} />0
         </div>
       </div>
+      <div className="flex gap-2 rounded-xl p-2">
+        <div className="flex">
+          <UserAvatar avatarUrl={user.avatarUrl} size={36} />
+        </div>
+        <div className="flex-col">
+          <div className="flex gap-2 items-center">
+            <div className="text-sm font-medium">Mark Zuckebrog</div>
+            <div className="text-slate-400 text-xs">2min ago</div>
+          </div>
+          <p>Bjirr sedap kali</p>
+        </div>
+      </div>
+
       <CommentEditor />
     </article>
   );
