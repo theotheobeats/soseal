@@ -4,6 +4,7 @@ import { validateRequest } from "@/auth";
 import prisma from "@/lib/prisma";
 import { getPostDataInclude } from "@/lib/types";
 import { createPostSchema } from "@/lib/validation";
+import { text } from "stream/consumers";
 
 export async function submitPost(input: string) {
   const { user } = await validateRequest();
@@ -41,4 +42,15 @@ export async function submitLike(isLiked: boolean, postId: string) {
     });
     return { success: true, like };
   }
+}
+
+export async function submitComment(text: string, postId: string) {
+  const { user } = await validateRequest();
+  if (!user) throw new Error("Unauthorized");
+
+  const newComment = await prisma.comment.create({
+    data: { postId, userId: user.id, text },
+  });
+
+  return newComment;
 }

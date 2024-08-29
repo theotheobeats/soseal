@@ -54,3 +54,10 @@ export interface followerInfo {
 export interface Likes {
   totalLikes: number;
 }
+
+export interface Comments {
+  id: string;
+  text: string;
+  postId: string;
+  userId: string;
+}

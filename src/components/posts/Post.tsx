@@ -1,6 +1,6 @@
 "use client";
 
-import { Likes, PostData } from "@/lib/types";
+import { Comments, Likes, PostData } from "@/lib/types";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import UserAvatar from "../UserAvatar";
@@ -11,8 +11,9 @@ import Linkify from "../Linkify";
 import UserToolTip from "../UserToolTip";
 import { MessageCircle, ThumbsUp } from "lucide-react";
 import CommentEditor from "./editor/CommentEditor";
-import { getIsLiked, getLikes } from "./actions";
+import { getComments, getIsLiked, getLikes } from "./actions";
 import { useSubmitLikeMutation } from "./editor/mutation";
+import CommentContainer from "./Comments";
 
 interface PostProps {
   post: PostData;
@@ -22,6 +23,7 @@ const Post = ({ post }: PostProps) => {
   const { user } = useSession();
   const [totalLike, setTotalLike] = useState<number | null>(null);
   const [isLiked, setIsLiked] = useState<boolean | null>(false);
+  const [comments, setComments] = useState<Comments[]>([]);
 
   const mutation = useSubmitLikeMutation();
 
@@ -30,6 +32,8 @@ const Post = ({ post }: PostProps) => {
       try {
         const likeCount = await getLikes(post.id);
         const liked = await getIsLiked(post.id);
+        const comments_data = await getComments(post.id);
+        setComments(comments_data);
         setIsLiked(liked);
         setTotalLike(likeCount);
 
@@ -120,20 +124,18 @@ const Post = ({ post }: PostProps) => {
           <MessageCircle size={15} />0
         </div>
       </div>
-      <div className="flex gap-2 rounded-xl p-2">
-        <div className="flex">
-          <UserAvatar avatarUrl={user.avatarUrl} size={36} />
+      {comments.map((data) => (
+        <div key={data.id}>
+          <CommentContainer
+            avatarUrl={user.avatarUrl}
+            postId={data.postId}
+            text={data.text}
+            userId={data.userId}
+          />
         </div>
-        <div className="flex-col">
-          <div className="flex gap-2 items-center">
-            <div className="text-sm font-medium">Mark Zuckebrog</div>
-            <div className="text-slate-400 text-xs">2min ago</div>
-          </div>
-          <p>Bjirr sedap kali</p>
-        </div>
-      </div>
+      ))}
 
-      <CommentEditor />
+      <CommentEditor postId={post.id} />
     </article>
   );
 };

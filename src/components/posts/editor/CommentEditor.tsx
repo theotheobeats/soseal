@@ -4,16 +4,17 @@ import React from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
-import UserAvatar from "@/components/UserAvatar";
 import { useSession } from "@/app/(main)/SessionProvider";
 import "./styles.css";
 import { useSubmitCommentMutation } from "./mutation";
 import LoadingButton from "@/components/LoadingButton";
 import { SendHorizonal } from "lucide-react";
 
-const CommentEditor = () => {
-  const { user } = useSession();
+interface CommentEditorProps {
+  postId: string;
+}
 
+const CommentEditor = ({ postId }: CommentEditorProps) => {
   const mutation = useSubmitCommentMutation();
 
   const editor = useEditor({
@@ -34,11 +35,16 @@ const CommentEditor = () => {
     }) || "";
 
   async function onSubmit() {
-    mutation.mutate(input, {
-      onSuccess: () => {
-        editor?.commands.clearContent();
+    if (!input.trim()) return;
+
+    mutation.mutate(
+      { text: input, postId: postId },
+      {
+        onSuccess: () => {
+          editor?.commands.clearContent();
+        },
       },
-    });
+    );
   }
 
   return (

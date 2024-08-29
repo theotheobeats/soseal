@@ -3,6 +3,8 @@
 import { validateRequest } from "@/auth";
 import prisma from "@/lib/prisma";
 
+// TODO: VALIDATE THE USER VIA FRONT END ONCE, JUST THROW THE USER.ID IN HERE
+
 export async function deletePost(id: string) {
   const { user } = await validateRequest();
 
@@ -43,4 +45,15 @@ export async function getIsLiked(postId: string) {
   }
 
   return true;
+}
+
+export async function getComments(postId: string) {
+  const { user } = await validateRequest();
+  if (!user) throw new Error("Unauthorized");
+
+  const posts = await prisma.comment.findMany({
+    where: { postId },
+  });
+
+  return posts;
 }
