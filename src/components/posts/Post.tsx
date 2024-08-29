@@ -127,13 +127,25 @@ const Post = ({ post }: PostProps) => {
       {comments.map((data) => (
         <div key={data.id}>
           <CommentContainer
-            avatarUrl={user.avatarUrl}
+            avatarUrl={user?.avatarUrl || ""}
             postId={data.postId}
             text={data.text}
             userId={data.userId}
           />
         </div>
       ))}
+      {/* <div className="flex gap-2 rounded-xl p-2">
+        <div className="flex">
+          <UserAvatar avatarUrl={user.avatarUrl} size={36} />
+        </div>
+        <div className="flex-col">
+          <div className="flex items-center gap-2">
+            <div className="text-sm font-medium">Mark Zuckebrog</div>
+            <div className="text-xs text-slate-400">2min ago</div>
+          </div>
+          <p>Bjirr sedap kali</p>
+        </div>
+      </div> */}
 
       <CommentEditor postId={post.id} />
     </article>
