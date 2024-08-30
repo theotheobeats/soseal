@@ -20,7 +20,7 @@ const MenuBar = ({ className }: MenuBarProps) => {
           <Home /> <span className="hidden lg:inline">Home</span>
         </Link>
       </Button>
-      <Button
+      {/* <Button
         variant="ghost"
         className="flex items-center justify-start gap-3"
         title="Notifications"
@@ -49,7 +49,7 @@ const MenuBar = ({ className }: MenuBarProps) => {
         <Link href="/bookmarks">
           <Bookmark /> <span className="hidden lg:inline">Bookmarks</span>
         </Link>
-      </Button>
+      </Button> */}
     </div>
   );
 };
